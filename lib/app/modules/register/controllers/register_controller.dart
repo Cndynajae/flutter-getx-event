@@ -15,30 +15,50 @@ class RegisterController extends GetxController {
   final authToken = GetStorage();
 
   void registerNow() async {
-    final response = await _getConnect.post(BaseUrl.register, {
-      'name': nameController.text,
-      'email': emailController.text,
-      'password': passwordController.text,
-      'password_confirmation': passwordConfirmationController.text,
-    });
+    final response = await _getConnect.post(
+      BaseUrl.register,
+      {
+        'name': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+        'password_confirmation': passwordConfirmationController.text,
+      },
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
 
     if (response.statusCode == 201) {
+      print('Registration successful: ${response.body}');
       authToken.write('token', response.body['token']);
+      Get.snackbar('Success', 'Registration successful');
       Get.offAll(() => const DashboardView());
     } else {
+      print('Registration error: ${response.statusCode}');
+      print('Response body: ${response.body}');
       Get.snackbar(
         'Error',
-        response.body['error'].toString(),
+        response.body['message'] ?? 'Registration failed',
         icon: const Icon(Icons.error),
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        forwardAnimationCurve: Curves.bounceIn,
-        margin: const EdgeInsets.only(
-          top: 10,
-          left: 5,
-          right: 5,
-        ),
+        // forwardAnimationCurve: Curves.bounceIn,
+        // margin: const EdgeInsets.only(
+        //   top: 10,
+        //   left: 5,
+        //   right: 5,
+        // ),
       );
+    } Catch(e) { 
+      print('Exception during resgistration: $e');
+      Get.snackbar( 
+        'Error', 
+        'An error occurred during registration.',
+        icon: const Icon(Icons.error),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        );
     }
   }
 

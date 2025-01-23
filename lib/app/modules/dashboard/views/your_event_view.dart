@@ -114,17 +114,23 @@ class YourEventView extends GetView {
                           },
                         ),
                         TextButton.icon(
-                          icon: const Icon(Icons.delete,
-                              color:
-                                  Colors.red), 
-                          label: const Text('Delete',
-                              style: TextStyle(
-                                  color:
-                                      Colors.red)), 
-                          onPressed: () { 
-                            controller.deleteEvent(id: event.id!);
-                          },
-                        ),
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            label: const Text('Delete',
+                                style: TextStyle(color: Colors.red)),
+                            onPressed: () {
+                              Get.defaultDialog(
+                                title: "Delete Event",
+                                middleText:
+                                    "Apakah anda yakin ingin menghapus berita event ini?",
+                                textCancel: "Cancel",
+                                textConfirm: "Delete",
+                                confirmTextColor: Colors.white,
+                                onConfirm: () {
+                                  controller.deleteEvent(id: event.id!);
+                                  Get.back(); // Close the dialog
+                                },
+                              );
+                            })
                       ],
                     ),
                   ],
